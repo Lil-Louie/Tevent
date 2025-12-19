@@ -1,27 +1,32 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { Auth0Provider } from "@auth0/auth0-react";
 import App from "./App";
 
-const domain = "dev-k06j7xhhvoyppfkq.us.auth0.com";
-const clientId = "tqq6iRdRdU4dXNCDEJ76A9BjDeQqwJt7";
+const domain = process.env.REACT_APP_AUTH0_DOMAIN;
+const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
 
-//added this to it
+if (!domain || !clientId) {
+  throw new Error("Missing Auth0 env vars: REACT_APP_AUTH0_DOMAIN / REACT_APP_AUTH0_CLIENT_ID");
+}
+
 const onRedirectCallback = (appState) => {
-  window.history.replaceState({}, document.title, appState?.returnTo || window.location.pathname);
+  window.history.replaceState(
+    {},
+    document.title,
+    appState?.returnTo || window.location.pathname
+  );
 };
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-    <Auth0Provider
-      domain={domain}
-      clientId={clientId}
-      authorizationParams={{ redirect_uri: window.location.origin }}
-      onRedirectCallback={onRedirectCallback}
-    >
-      <App />
-    </Auth0Provider>
-
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <Auth0Provider
+    domain={domain}
+    clientId={clientId}
+    authorizationParams={{
+      redirect_uri: window.location.origin,
+    }}
+    onRedirectCallback={onRedirectCallback}
+  >
+    <App />
+  </Auth0Provider>
 );
-
-
