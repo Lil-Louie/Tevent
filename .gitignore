@@ -8,7 +8,6 @@ backend/node_modules/
 frontend/node_modules/
 
 # 📌 Ignore package lock files (Optional, if using only package.json)
-package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
