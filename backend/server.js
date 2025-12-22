@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+import cors from "cors";
 const eventRoutes = require('./routes/events');
 const userRoutes = require('./routes/users');
 const authRoutes = require("./routes/auth");
@@ -11,6 +12,17 @@ const authRoutes = require("./routes/auth");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
+
+
+app.use(cors({
+  origin: [
+    "http://localhost:3001",
+    "https://tevent.00flacco.com"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 
 app.get('/', (req, res) => {
     res.send(`Server running on port ${PORT}`);

@@ -4,6 +4,7 @@
     "@react-google-maps/api": "^2.20.6",
     "@schedule-x/react": "^2.25.0",
     "@schedule-x/theme-default": "^2.25.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "mogodb": "^0.0.1-security",
     "mongodb": "^4.17.2",
