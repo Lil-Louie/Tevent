@@ -5,6 +5,9 @@ import App from "./App";
 
 const domain = process.env.REACT_APP_AUTH0_DOMAIN;
 const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
+console.log("Auth0 domain:", process.env.REACT_APP_AUTH0_DOMAIN);
+console.log("Auth0 clientId:", process.env.REACT_APP_AUTH0_CLIENT_ID);
+console.log("Origin:", window.location.origin);
 
 if (!domain || !clientId) {
   throw new Error("Missing Auth0 env vars: REACT_APP_AUTH0_DOMAIN / REACT_APP_AUTH0_CLIENT_ID");
