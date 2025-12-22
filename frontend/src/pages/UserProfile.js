@@ -41,7 +41,7 @@ const UserProfile = () => {
       formData.append("image", file);
   
       try {
-        const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/upload`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/upload`, {
           method: "POST",
           body: formData,
         });
@@ -52,7 +52,7 @@ const UserProfile = () => {
         setBannerPic(uploadedImageUrl);
   
         // Now update the user's backgroundImage in MongoDB
-        await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/users/updateProfile`, {
+        await fetch(`${process.env.REACT_APP_API_URL}/api/users/updateProfile`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
