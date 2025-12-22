@@ -3,15 +3,17 @@ import ReactDOM from "react-dom/client";
 import { Auth0Provider } from "@auth0/auth0-react";
 import App from "./App";
 
-const domain = process.env.TEVENT_AUTH0_DOMAIN;
-const clientId = process.env.TEVENT_CLIENT_ID;
-console.log("Auth0 domain:", process.env.TEVENT_AUTH0_DOMAIN);
-console.log("Auth0 clientId:", process.env.TEVENT_CLIENT_ID);
+const domain = process.env.REACT_APP_AUTH0_DOMAIN;
+const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
+
+console.log("Auth0 domain:", domain);
+console.log("Auth0 clientId:", clientId);
 console.log("Origin:", window.location.origin);
 
 if (!domain || !clientId) {
   throw new Error("Missing Auth0 env vars: REACT_APP_AUTH0_DOMAIN / REACT_APP_AUTH0_CLIENT_ID");
 }
+
 
 const onRedirectCallback = (appState) => {
   window.history.replaceState(
