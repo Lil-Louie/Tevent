@@ -90,12 +90,15 @@ router.post("/events/:id/attend", async (req, res) => {
  * @desc    Fetch all events
  */
 router.get("/events", async (req, res) => {
+  console.time("events_total");
   try {
-    const events = await Event.find();
+    console.time("events_db");
+    const events = await Event.find().lean();
+    console.timeEnd("events_db");
+
     res.json(events);
-  } catch (err) {
-    console.error("Error fetching events:", err);
-    res.status(500).json({ error: err.message });
+  } finally {
+    console.timeEnd("events_total");
   }
 });
 
