@@ -43,6 +43,29 @@ const App = () => {
   
   if (loadError) console.error("Google Maps load error:", loadError);
   
+
+  useEffect(() => {
+    const syncUser = async () => {
+      if (!isAuthenticated || !user) return;
+  
+      await fetch(`${process.env.REACT_APP_API_URL}/auth/sync-user`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sub: user.sub,
+          email: user.email,
+          username: user.nickname || user.name || user.email?.split("@")[0] || "user",
+          picture: user.picture,
+        }),
+      });
+    };
+  
+    syncUser().catch(console.error);
+  }, [isAuthenticated, user]);
+
+
+  
+
   return (
     <ThemeProvider>
     <Router>

@@ -46,31 +46,16 @@ router.post("/favorites", async (req, res) => {
 
 router.get("/favorites", async (req, res) => {
   const { auth0Id } = req.query;
-
   try {
-    let user = await User.findOne({ auth0Id }).populate("favorites");
-
-    if (!user) {
-      // username is required in your schema, so we must generate one.
-      const base = (auth0Id || "user").split("|").pop().slice(0, 8);
-      const username = `user_${base}_${Math.floor(Math.random() * 10000)}`;
-
-      user = await User.create({
-        auth0Id,
-        username,
-        favorites: [],
-      });
-
-      // populate after create (optional)
-      await user.populate("favorites");
-    }
-
+    const user = await User.findOne({ auth0Id }).populate("favorites").lean();
+    if (!user) return res.status(404).json({ message: "User not found" });
     res.json({ favorites: user.favorites });
-  } catch (error) {
-    console.error("Error fetching favorites:", error);
+  } catch (err) {
+    console.error("Error fetching favorites:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 module.exports = router;

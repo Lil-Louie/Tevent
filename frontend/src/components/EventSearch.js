@@ -73,22 +73,22 @@ const EventSearch = ({ isLoaded }) => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/events`);
-        if (!response.ok) throw new Error("Failed to fetch events");
-        const data = await response.json();
-        const cleanData = data.filter(
-          (event) =>
-            typeof event.lat === "number" &&
-            typeof event.lng === "number" &&
-            !isNaN(event.lat) &&
-            !isNaN(event.lng)
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/events`
         );
-        console.log("✅ All events from backend:", data); // 👈 Log full raw data
-        console.log("✅ Cleaned events with valid coordinates:", cleanData);
-        setAllEvents(data);
-        setFilteredEvents(data);      
-      } 
-      catch (err) {
+        if (!response.ok) throw new Error("Failed to fetch events");
+  
+        const data = await response.json();
+  
+        // ✅ Normalize Mongo _id → id (strings)
+        const normalized = data.map((event) => ({
+          ...event,
+          id: String(event._id),
+        }));
+  
+        setAllEvents(normalized);
+        setFilteredEvents(normalized);
+      } catch (err) {
         console.error("Error loading events:", err);
         toast.error("Failed to load events from server.");
       }
