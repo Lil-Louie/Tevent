@@ -27,19 +27,18 @@ import "react-toastify/dist/ReactToastify.css";
 import { ThemeProvider } from './context/ThemeContext'; // adjust path as needed
 
 
+const LIBRARIES = ["places"];
 
 const App = () => {
   const { isAuthenticated, user } = useAuth0();
   const [searchQuery, setSearchQuery] = useState("");
   const [locationQuery, setLocationQuery] = useState("");
 
-  //Load Google Maps API ONCE here
-  const libraries = ['places'];
-
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: ['places'],
+    libraries: LIBRARIES,
   });
+  
   
   if (loadError) console.error("Google Maps load error:", loadError);
   

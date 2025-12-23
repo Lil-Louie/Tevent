@@ -279,6 +279,7 @@ const EventSearch = ({ isLoaded }) => {
             />
 
             <AutocompleteInput
+              isLoaded={isLoaded}
               value={locationInput}
               onChange={(e) => setLocationInput(e.target.value)}
               placeholder="Enter city or zip code..."
@@ -292,6 +293,7 @@ const EventSearch = ({ isLoaded }) => {
               }}
               onKeyDown={handleKeyDown}
             />
+
 
             <button className="btn btn-danger" onClick={() => handleSearch()}>
               <FaSearch />
