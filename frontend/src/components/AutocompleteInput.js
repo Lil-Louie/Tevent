@@ -13,21 +13,24 @@ const AutocompleteInput = ({
 
   useEffect(() => {
     if (!isLoaded || !window.google || !inputRef.current) return;
-
+  
     const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
       types: ["geocode"],
       componentRestrictions: { country: "us" },
-      fields: ["geometry", "formatted_address", "address_components"], // ✅ modern way
+      fields: ["geometry", "formatted_address", "address_components"],
     });
-
-    const listener = autocomplete.addListener("place_changed", () => {
+  
+    autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
       if (!place.geometry) return;
       onPlaceSelected?.(place);
     });
-
-    return () => listener.remove();
+  
+    return () => {
+      window.google.maps.event.clearInstanceListeners(autocomplete);
+    };
   }, [isLoaded, onPlaceSelected]);
+  
 
   return (
     <input
