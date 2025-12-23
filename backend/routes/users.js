@@ -4,18 +4,29 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-router.post('/favorites', async (req, res) => {
+router.post("/favorites", async (req, res) => {
   const { auth0Id, eventId } = req.body;
 
   try {
-    const user = await User.findOne({ auth0Id });
+    let user = await User.findOne({ auth0Id });
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      const base = (auth0Id || "user").split("|").pop().slice(0, 8);
+      const username = `user_${base}_${Math.floor(Math.random() * 10000)}`;
 
-    const alreadyFavorited = user.favorites.includes(eventId);
+      user = await User.create({
+        auth0Id,
+        username,
+        favorites: [],
+      });
+    }
+
+    const alreadyFavorited = user.favorites.some(
+      (id) => id.toString() === eventId
+    );
 
     if (alreadyFavorited) {
-      user.favorites.pull(eventId);
+      user.favorites = user.favorites.filter((id) => id.toString() !== eventId);
     } else {
       user.favorites.push(eventId);
     }
@@ -23,42 +34,43 @@ router.post('/favorites', async (req, res) => {
     await user.save();
 
     res.json({
-      updatedFavorites: user.favorites,
-      message: alreadyFavorited ? "Removed from favorites!" : "Added to favorites!"
+      updatedFavorites: user.favorites.map((id) => id.toString()),
+      message: alreadyFavorited ? "Removed from favorites!" : "Added to favorites!",
     });
-
   } catch (error) {
     console.error("Error toggling favorite:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-router.get('/favorites', (req, res) => {
-    res.send('GET favorites route is working!');
-  });
 
-  
-  router.put('/updateProfile', async (req, res) => {
-    const { auth0Id, picture, backgroundImage, gallery, bio, contact, name, username } = req.body;
-  
-    try {
-      const user = await User.findOne({ auth0Id });
-      if (!user) return res.status(404).json({ message: "User not found" });
-  
-      if (picture) user.picture = picture;
-      if (backgroundImage) user.backgroundImage = backgroundImage;
-      if (gallery) user.gallery = gallery;
-      if (bio) user.bio = bio;
-      if (contact) user.contact = contact;
-      if (name) user.name = name;
-      if (username) user.username = username;
-  
-      await user.save();
-      res.json({ message: "Profile updated successfully!", user });
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      res.status(500).json({ message: "Server error" });
+router.get("/favorites", async (req, res) => {
+  const { auth0Id } = req.query;
+
+  try {
+    let user = await User.findOne({ auth0Id }).populate("favorites");
+
+    if (!user) {
+      // username is required in your schema, so we must generate one.
+      const base = (auth0Id || "user").split("|").pop().slice(0, 8);
+      const username = `user_${base}_${Math.floor(Math.random() * 10000)}`;
+
+      user = await User.create({
+        auth0Id,
+        username,
+        favorites: [],
+      });
+
+      // populate after create (optional)
+      await user.populate("favorites");
     }
-  });
+
+    res.json({ favorites: user.favorites });
+  } catch (error) {
+    console.error("Error fetching favorites:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 module.exports = router;
