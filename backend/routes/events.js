@@ -54,38 +54,29 @@ router.post("/events", async (req, res) => {
 
 
 
-/**
+/*
  * @route   GET /api/events
- * @desc    Fetch all events
+ * @desc    Fetch next 10 upcoming events (soonest by time)
  */
 router.get("/events", async (req, res) => {
   console.time("events_total");
   try {
     console.time("events_db");
-    const events = await Event.find().lean();
-    console.timeEnd("events_db");
 
+    const now = new Date();
+
+    const events = await Event.find({ startTime: { $gte: now } }) // adjust field name
+      .sort({ startTime: 1 }) // soonest first
+      .limit(10)
+      .lean();
+
+    console.timeEnd("events_db");
     res.json(events);
   } finally {
     console.timeEnd("events_total");
   }
 });
 
-
-router.get('/users/favorites', async (req, res) => {
-  const { auth0Id } = req.query; // assuming you pass auth0Id as a query param
-
-  try {
-    const user = await User.findOne({ auth0Id }).populate('favorites'); // populate if favorites are event refs
-
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    res.json({ favorites: user.favorites });
-  } catch (error) {
-    console.error("Error fetching favorites:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
 
 
 
