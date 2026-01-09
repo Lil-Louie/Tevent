@@ -266,7 +266,7 @@ const EventSearch = ({ isLoaded }) => {
             />
 
 
-            <button className="btn btn-danger mb-2" onClick={() => handleSearch()}>
+            <button className="btn btn-danger mb-2 me-2" onClick={() => handleSearch()}>
               <FaSearch />
             </button>
 
