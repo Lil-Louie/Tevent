@@ -50,38 +50,7 @@ router.post("/events", async (req, res) => {
   }
 });
 
-/**
- * @route   POST /api/events/:id/attend
- * @desc    Mark a user as attending an event
- */
-router.post("/events/:id/attend", async (req, res) => {
-  try {
-    const { auth0Id } = req.body; // Expecting Auth0 ID from frontend
 
-    // 1. Find the User by Auth0 ID
-    const user = await User.findOne({ auth0Id });
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    const event = await Event.findById(req.params.id);
-    if (!event) return res.status(404).json({ message: "Event not found" });
-
-    // 2. Add user's MongoDB _id to the attendees array if not already added
-    if (!event.attendees.includes(user._id)) {
-      event.attendees.push(user._id);
-      await event.save();
-
-      // 3. Also add the event to the user's 'eventsGoing' array
-      await User.findByIdAndUpdate(user._id, {
-        $addToSet: { eventsGoing: event._id },
-      });
-    }
-
-    res.json({ message: "Marked as going", event });
-  } catch (err) {
-    console.error("Error marking as attending:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
 
 
 
@@ -115,6 +84,41 @@ router.get('/users/favorites', async (req, res) => {
   } catch (error) {
     console.error("Error fetching favorites:", error);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+/**
+ * @route   POST /api/events/:id/attend
+ * @desc    Mark a user as attending an event
+ */
+router.post("/events/:id/attend", async (req, res) => {
+  try {
+    const { auth0Id } = req.body; // Expecting Auth0 ID from frontend
+
+    // 1. Find the User by Auth0 ID
+    const user = await User.findOne({ auth0Id });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ message: "Event not found" });
+
+    // 2. Add user's MongoDB _id to the attendees array if not already added
+    if (!event.attendees.includes(user._id)) {
+      event.attendees.push(user._id);
+      await event.save();
+
+      // 3. Also add the event to the user's 'eventsGoing' array
+      await User.findByIdAndUpdate(user._id, {
+        $addToSet: { eventsGoing: event._id },
+      });
+    }
+
+    res.json({ message: "Marked as going", event });
+  } catch (err) {
+    console.error("Error marking as attending:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 
