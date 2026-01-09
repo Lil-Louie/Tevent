@@ -24,7 +24,7 @@ function formatDisplayDate(isoString) {
 
 
 const EventSearch = ({ isLoaded }) => {
-  const { user, isAuthenticated } = useAuth0(); // Make sure to destructure `user` from useAuth0
+  const { user, isAuthenticated } = useAuth0(); 
 
   const [coordinates, setCoordinates] = useState({ lat: 38.4404, lng: -122.7141 });
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -94,7 +94,6 @@ const EventSearch = ({ isLoaded }) => {
   
     fetchEvents();
   }, []);
-  console.log("API:", process.env.REACT_APP_API_URL);
 
   
 
