@@ -14,7 +14,6 @@ import AutocompleteInput from "../components/AutocompleteInput";
 import Modal from "../components/Modal";
 import MapWithMarkers from "../components/MapWithMarkers";
 import { filterByAudience } from "../utils/audienceUtils";
-import fakeEvents from "../Fakedata/fakeEvents";
 
 
 function formatDisplayDate(isoString) {
@@ -184,7 +183,7 @@ const EventSearch = ({ isLoaded }) => {
 
     // 1) Title/Location text search:
     if (searchInput) {
-      const fuse = new Fuse(fakeEvents, {
+      const fuse = new Fuse(allEvents, {
         keys: ["title", "location"],
         threshold: 0.3,
       });

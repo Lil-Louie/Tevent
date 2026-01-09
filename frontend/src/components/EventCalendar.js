@@ -4,7 +4,6 @@ import { createViewWeek, createViewMonthGrid } from "@schedule-x/calendar";
 import { toast } from 'react-toastify';
 import AutocompleteInput from "./AutocompleteInput"; 
 
-import fakeEvents from '../Fakedata/fakeEvents';
 import useUserProfile from "../hooks/useUserProfile";
 
 import "@schedule-x/theme-default/dist/calendar.css";
