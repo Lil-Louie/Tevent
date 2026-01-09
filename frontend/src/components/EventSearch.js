@@ -265,28 +265,12 @@ const EventSearch = ({ isLoaded }) => {
               onKeyDown={handleKeyDown}
             />
 
-            <AutocompleteInput
-              isLoaded={isLoaded}
-              value={locationInput}
-              onChange={(e) => setLocationInput(e.target.value)}
-              placeholder="Enter city or zip code..."
-              onPlaceSelected={(place) => {
-                const coords = {
-                  lat: place.geometry.location.lat(),
-                  lng: place.geometry.location.lng(),
-                };
-                setCoordinates(coords);
-                setLocationInput(place.formatted_address);
-              }}
-              onKeyDown={handleKeyDown}
-            />
-
 
             <button className="btn btn-danger" onClick={() => handleSearch()}>
               <FaSearch />
             </button>
 
-            <button className="btn btn-secondary ms-2" onClick={handleUseMyLocation}>
+            <button className="btn btn-secondary" onClick={handleUseMyLocation}>
               Use My Location
             </button>
           </div>
