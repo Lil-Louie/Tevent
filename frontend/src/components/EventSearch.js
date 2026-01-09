@@ -42,12 +42,6 @@ const EventSearch = ({ isLoaded }) => {
   const [allEvents, setAllEvents] = useState([]);
 
 
-  useEffect(() => {
-    const savedFavorites = localStorage.getItem("favorites");
-    if (savedFavorites) {
-      setFavorites(JSON.parse(savedFavorites));
-    }
-  }, []);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -64,9 +58,6 @@ const EventSearch = ({ isLoaded }) => {
     }
   }, [isAuthenticated]);
 
-  useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
 
 
   useEffect(() => {
@@ -205,10 +196,8 @@ const EventSearch = ({ isLoaded }) => {
 
     // 4) Audience filter:
     if (audienceFilter) {
-      filtered = filtered.filter((event) => event.audience === audienceFilter);
+      filtered = filterByAudience(filtered, audienceFilter);
     }
-    // or use your "filterByAudience" helper:
-    filtered = filterByAudience(filtered, audienceFilter);
 
     // 5) Distance filter:
     const userCoords = newCoordinates || coordinates;
@@ -302,73 +291,8 @@ const EventSearch = ({ isLoaded }) => {
             </button>
           </div>
 
-          {/* FILTERS */}
-          <div className="d-flex mb-4 gap-3">
-            {/* Date Filter */}
-            <select
-              className="form-select"
-              value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
-            >
-              <option value="">Any Day</option>
-              <option value="today">Today</option>
-              <option value="tomorrow">Tomorrow</option>
-              <option value="this week">This Week</option>
-              <option value="this weekend">This Weekend</option>
-              <option value="next week">Next Week</option>
-            </select>
 
-            {/* Category Filter */}
-            <select
-              className="form-select"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="">Any Category</option>
-              <option value="Music">Music</option>
-              <option value="Business">Business</option>
-              <option value="Food & Drink">Food & Drink</option>
-              <option value="Health & Fitness">Health & Fitness</option>
-            </select>
-
-            {/* Audience Filter */}
-            <select
-              className="form-select"
-              value={audienceFilter}
-              onChange={(e) => setAudienceFilter(e.target.value)}
-            >
-              <option value="">Any Audience</option>
-              <option value="Everyone">Everyone</option>
-              <option value="18+">18+</option>
-              <option value="21+">21+</option>
-            </select>
-            {/* Distance Slider */}
-            
-          </div>
-          <div className="distance-slider-wrapper">
-              <label htmlFor="distanceSlider" className="form-label">
-                <h5>Event Search Distance:{" "}
-                {distanceFilter === 0
-                  ? "Any"
-                  : `${distanceFilter} miles`}
-                  </h5>
-              </label>
-              <input
-                id="distanceSlider"
-                type="range"
-                className="form-range"
-                min="0"
-                max="100"  // or whatever max you want
-                value={distanceFilter}
-                onChange={(e) => {
-                  // Convert string -> number
-                  const val = parseInt(e.target.value, 10);
-                  setDistanceFilter(val);
-                }}
-              />
-            </div>
-
-          {/* Favorites toggle */}
+          {/* FILTERS Favorites toggle */}
           <div className="form-check mb-3">
             <input
               className="form-check-input"
