@@ -80,7 +80,6 @@ const EventSearch = ({ isLoaded }) => {
   
         const data = await response.json();
   
-        // ✅ Normalize Mongo _id → id (strings)
         const normalized = data.map((event) => ({
           ...event,
           id: String(event._id),
@@ -90,12 +89,13 @@ const EventSearch = ({ isLoaded }) => {
         setFilteredEvents(normalized);
       } catch (err) {
         console.error("Error loading events:", err);
-        toast.error("Failed to load events from server.");
       }
     };
   
     fetchEvents();
   }, []);
+  console.log("API:", process.env.REACT_APP_API_URL);
+
   
 
   const toggleFavorite = async (eventId) => {
