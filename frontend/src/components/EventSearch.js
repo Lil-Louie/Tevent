@@ -266,11 +266,11 @@ const EventSearch = ({ isLoaded }) => {
             />
 
 
-            <button className="btn btn-danger" onClick={() => handleSearch()}>
+            <button className="btn btn-danger me-2" onClick={() => handleSearch()}>
               <FaSearch />
             </button>
 
-            <button className="btn btn-secondary" onClick={handleUseMyLocation}>
+            <button className="btn btn-secondary me-2 p-1" onClick={handleUseMyLocation}>
               Use My Location
             </button>
           </div>
